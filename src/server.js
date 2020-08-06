@@ -13,9 +13,10 @@ app.use(cors());
 app.use(morgan('dev'));
 
 const main = async () => {
+  const port = Number(config.PORT);
   await connectDb();
   app.listen(3020, () => {
-    console.log(`Server connected on ${config.port}`);
+    console.log(`Server connected on ${port}`);
   });
 };
 
