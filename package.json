@@ -8,7 +8,7 @@
     "restart": "rimraf dist && npm run build && npm run start",
     "build": "babel src --out-dir dist",
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watch"
   },
   "author": "Benjamin Ochieng",
   "license": "ISC",
@@ -30,6 +30,8 @@
     "@babel/core": "^7.11.1",
     "@babel/plugin-transform-runtime": "^7.11.0",
     "@babel/preset-env": "^7.11.0",
+    "@types/jest": "^26.0.9",
+    "babel-jest": "^26.3.0",
     "eslint": "^7.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.11.0",
