@@ -4,7 +4,11 @@ import List from '../lists.model';
 describe('List model', () => {
   it('has a name property ', () => {
     const { name } = List.schema.obj;
-    expect(name).toEqual(String);
+    expect(name).toEqual({
+      type: String,
+      required: true,
+      default: 'Shopping list',
+    });
   });
 
   it('has has a lists property', () => {
@@ -23,7 +27,7 @@ describe('List model', () => {
       type: String,
       required: true,
       enum: ['active', 'completed', 'cancelled'],
-      dafault: 'active',
+      default: 'active',
     });
   });
 });
