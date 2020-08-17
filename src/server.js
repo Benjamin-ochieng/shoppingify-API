@@ -13,7 +13,7 @@ app.use(urlencoded({ extended: true }));
 app.use(cors());
 app.use(morgan('dev'));
 
-app.use('/lists', listRouter)
+app.use('/lists', listRouter);
 
 const main = async () => {
   const port = Number(config.PORT);
