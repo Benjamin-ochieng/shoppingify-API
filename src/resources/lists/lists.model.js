@@ -2,7 +2,11 @@ import mongoose from 'mongoose';
 
 const listSchema = new mongoose.Schema(
   {
-    name: String,
+    name: {
+      type: String,
+      required: true,
+      default: 'Shopping list',
+    },
     items: [
       {
         type: mongoose.SchemaTypes.ObjectId,
@@ -13,7 +17,7 @@ const listSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: ['active', 'completed', 'cancelled'],
-      dafault: 'active',
+      default: 'active',
     },
   },
   // eslint-disable-next-line prettier/prettier
