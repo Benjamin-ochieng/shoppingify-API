@@ -1,8 +1,12 @@
-export const createOne = (Model) => async (req, res) => {
+/* eslint-disable consistent-return */
+/* eslint-disable import/prefer-default-export */
+export const createOne = (Model) => async (req, res, next) => {
+  let doc;
+  const input = req.body;
   try {
-    const doc = await Model.create(req.body);
-    res.status(201).json({ doc });
-  } catch (error) {
-    console.log(error);
+    doc = await Model.create(input);
+  } catch (err) {
+    return next(err);
   }
+  res.status(201).json(doc);
 };

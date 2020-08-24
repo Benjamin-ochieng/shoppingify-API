@@ -4,6 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import config from './config';
 import { connectDb } from './utils/db';
+import { validationErrors, productionErrors } from './utils/errorHandler';
 import listRouter from './resources/lists/lists.router';
 
 const app = express();
@@ -15,10 +16,14 @@ app.use(morgan('dev'));
 
 app.use('/lists', listRouter);
 
+app.use(validationErrors);
+app.use(productionErrors);
+
 const main = async () => {
   const port = Number(config.PORT);
   await connectDb();
   app.listen(3020, () => {
+    // eslint-disable-next-line no-console
     console.log(`Server connected on ${port}`);
   });
 };

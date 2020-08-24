@@ -7,7 +7,6 @@ describe('List model', () => {
     expect(name).toEqual({
       type: String,
       required: true,
-      default: 'Shopping list',
     });
   });
 

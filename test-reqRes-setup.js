@@ -1,6 +1,7 @@
 /* eslint-disable func-names */
 /* eslint-disable comma-dangle */
 const setupReqRes = () => {
+  const next = jest.fn();
   const req = {
     body: {},
   };
@@ -40,6 +41,7 @@ const setupReqRes = () => {
   return {
     req,
     res,
+    next,
   };
 };
 
