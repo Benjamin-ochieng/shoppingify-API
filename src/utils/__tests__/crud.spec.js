@@ -1,11 +1,13 @@
+/* eslint-disable no-underscore-dangle */
 import { merge } from 'lodash';
+import mongoose from 'mongoose';
 import List from '../../resources/lists/lists.model';
-import { createOne } from '../crud';
+import { createOne, findMany, findOne } from '../crud';
 import setupReqRes from '../../../test-reqRes-setup';
 
 describe('crud methods', () => {
   describe('createOne', () => {
-    it('calls next errors', async () => {
+    it('throws error for bad request', async () => {
       const { req, res, next } = setupReqRes();
       const createList = createOne(List);
       await createList(req, res, next);
@@ -13,7 +15,7 @@ describe('crud methods', () => {
       expect(next).toHaveBeenCalledWith(err);
     });
 
-    it('creates a documents', async () => {
+    it('creates a document', async () => {
       const { req, res, next } = setupReqRes();
       const body = { req: { body: { name: "Chela's birthday" } } };
       merge({ req, res, next }, body);
@@ -22,6 +24,54 @@ describe('crud methods', () => {
       const [doc] = res.json.mock.calls[0];
       expect(res.json).toHaveBeenCalledWith(doc);
       expect(res.status).toHaveBeenCalledWith(201);
+    });
+  });
+
+  describe('findMany', () => {
+    it('returns an array of documents', async () => {
+      const { req, res, next } = setupReqRes();
+      const lists = [
+        { name: "Chela's birthday" },
+        { name: "Benja's birthday" },
+      ];
+      // eslint-disable-next-line no-restricted-syntax
+      for (const list of lists) {
+        const newList = new List(list);
+        // eslint-disable-next-line no-await-in-loop
+        await newList.save();
+      }
+      const getLists = findMany(List);
+      await getLists(req, res, next);
+      const [docs] = res.json.mock.calls[0];
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(docs);
+    });
+  });
+
+  describe('findOne', () => {
+    it('Throws error if document is not found', async () => {
+      const { req, res, next } = setupReqRes();
+      const params = {
+        req: { params: { id: mongoose.Types.ObjectId() } },
+      };
+      merge({ req, res, next }, params);
+      const getList = findOne(List);
+      await getList(req, res, next);
+      const [err] = next.mock.calls[0];
+      expect(next).toHaveBeenCalledWith(err);
+    });
+
+    it('Returns a document if request is correct', async () => {
+      const { req, res, next } = setupReqRes();
+      const testList = await List.create({ name: "Chela's birthday" });
+      const params = {
+        req: { params: { id: testList._id } },
+      };
+      merge({ req, res, next }, params);
+      await findOne(List)(req, res, next);
+      expect(res.status).toHaveBeenCalledWith(200);
+      const [doc] = res.json.mock.calls[0];
+      expect(res.json).toHaveBeenCalledWith(doc);
     });
   });
 });
