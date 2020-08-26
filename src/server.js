@@ -4,7 +4,11 @@ import cors from 'cors';
 import morgan from 'morgan';
 import config from './config';
 import { connectDb } from './utils/db';
-import { validationErrors, productionErrors } from './utils/errorHandler';
+import {
+  validationErrors,
+  productionErrors,
+  notFound,
+} from './utils/errorHandler';
 import listRouter from './resources/lists/lists.router';
 
 const app = express();
@@ -16,6 +20,7 @@ app.use(morgan('dev'));
 
 app.use('/lists', listRouter);
 
+app.use(notFound);
 app.use(validationErrors);
 app.use(productionErrors);
 

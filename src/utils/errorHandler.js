@@ -1,6 +1,17 @@
 /* eslint-disable consistent-return */
 /* eslint-disable import/prefer-default-export */
 import mongoose from 'mongoose';
+import { NotFound } from './errorClasses';
+
+export const notFound = (error, req, res, next) => {
+  if (error instanceof NotFound === false) {
+    return next(error);
+  }
+  // eslint-disable-next-line object-curly-newline
+  const { type, status, message, path } = error;
+  // eslint-disable-next-line object-curly-newline
+  res.status(404).json({ type, status, message, path });
+};
 
 const errorToJson = (error) => {
   const { errors } = error;

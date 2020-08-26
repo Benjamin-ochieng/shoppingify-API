@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-import { validationErrors } from '../errorHandler';
+import { validationErrors, notFound } from '../errorHandler';
 import setupReqRes from '../../../test-reqRes-setup';
+import { NotFound } from '../errorClasses';
 
 const schema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -10,7 +11,7 @@ const Model = mongoose.model('Test', schema);
 const doc = new Model({});
 
 describe('validationErrors', () => {
-  it('calls next if error is not a mongdb validatonError', () => {
+  it('calls next if error is not a mongdb ValidatonError', () => {
     const { req, res, next } = setupReqRes();
     const err = () => {
       throw new Error();
@@ -19,12 +20,40 @@ describe('validationErrors', () => {
     expect(next).toHaveBeenCalledTimes(1);
   });
 
-  it('returns 400 with consumable JSON error representation', () => {
+  it('returns 400 with JSON representation of ValidatonError', () => {
     const { req, res, next } = setupReqRes();
     const err = doc.validateSync();
     validationErrors(err, req, res, next);
     const [data] = res.json.mock.calls[0];
     expect(res.json).toHaveBeenCalledWith(data);
     expect(res.status).toHaveBeenCalledWith(400);
+  });
+});
+
+describe('notFound', () => {
+  it('calls next if error is not a NotFound error', () => {
+    const { req, res, next } = setupReqRes();
+    const err = () => {
+      throw new Error();
+    };
+    notFound(() => err(), req, res, next);
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns 404 with JSON representation of NotFound', () => {
+    const { req, res, next } = setupReqRes();
+    try {
+      throw new NotFound('Resource not found', {
+        type: 'notFound_error',
+        status: 404,
+        message: 'We could not find the resource you requested',
+        path: '/12345', // eslint-disable-next-line comma-dangle
+      });
+    } catch (error) {
+      notFound(error, req, res, next);
+    }
+    const [data] = res.json.mock.calls[0];
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith(data);
   });
 });
