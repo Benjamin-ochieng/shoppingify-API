@@ -1,10 +1,10 @@
 /* eslint-disable consistent-return */
 /* eslint-disable import/prefer-default-export */
 import mongoose from 'mongoose';
-import { NotFound } from './errorClasses';
+import { InvalidRequest } from './errorClasses';
 
 export const notFound = (error, req, res, next) => {
-  if (error instanceof NotFound === false) {
+  if (error instanceof InvalidRequest === false) {
     return next(error);
   }
   // eslint-disable-next-line object-curly-newline

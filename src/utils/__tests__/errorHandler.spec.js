@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { validationErrors, notFound } from '../errorHandler';
 import setupReqRes from '../../../test-reqRes-setup';
-import { NotFound } from '../errorClasses';
+import { InvalidRequest } from '../errorClasses';
 
 const schema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -43,7 +43,7 @@ describe('notFound', () => {
   it('returns 404 with JSON representation of NotFound', () => {
     const { req, res, next } = setupReqRes();
     try {
-      throw new NotFound('Resource not found', {
+      throw new InvalidRequest('Resource not found', {
         type: 'notFound_error',
         status: 404,
         message: 'We could not find the resource you requested',

@@ -2,7 +2,8 @@
 import { merge } from 'lodash';
 import mongoose from 'mongoose';
 import List from '../../resources/lists/lists.model';
-import { createOne, findMany, findOne } from '../crud';
+// eslint-disable-next-line object-curly-newline
+import { createOne, findMany, findOne, updateOne, deleteOne } from '../crud';
 import setupReqRes from '../../../test-reqRes-setup';
 
 describe('crud methods', () => {
@@ -61,7 +62,7 @@ describe('crud methods', () => {
       expect(next).toHaveBeenCalledWith(err);
     });
 
-    it('Returns a document if request is correct', async () => {
+    it('Returns specific document', async () => {
       const { req, res, next } = setupReqRes();
       const testList = await List.create({ name: "Chela's birthday" });
       const params = {
@@ -72,6 +73,60 @@ describe('crud methods', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       const [doc] = res.json.mock.calls[0];
       expect(res.json).toHaveBeenCalledWith(doc);
+    });
+  });
+
+  describe('updateOne', () => {
+    it('Throws error for incorrect document id', async () => {
+      const { req, res, next } = setupReqRes();
+      const params = {
+        req: { params: { id: mongoose.Types.ObjectId() } },
+      };
+      merge({ req, res, next }, params);
+      await updateOne(List)(req, res, next);
+      const [err] = next.mock.calls[0];
+      expect(next).toHaveBeenCalledWith(err);
+    });
+
+    it('Updates specific document', async () => {
+      const testList = await List.create({ name: 'House decor' });
+      const { req, res, next } = setupReqRes();
+      const params = {
+        req: { params: { id: testList._id } },
+      };
+      const body = {
+        req: { body: { name: 'Home decor' } },
+      };
+      merge({ req, res, next }, params, body);
+      await updateOne(List)(req, res, next);
+      const [updatedList] = res.json.mock.calls[0];
+      expect(res.status).toBeCalledWith(200);
+      expect(res.json).toBeCalledWith(updatedList);
+    });
+  });
+
+  describe('deleteOne', () => {
+    it('Throws error for incorrect document id', async () => {
+      const { req, res, next } = setupReqRes();
+      const params = {
+        req: { params: { id: mongoose.Types.ObjectId() } },
+      };
+      merge({ req, res, next }, params);
+      await deleteOne(List)(req, res, next);
+      const [err] = next.mock.calls[0];
+      expect(next).toHaveBeenCalledWith(err);
+    });
+
+    it('deletes a specific document', async () => {
+      const testList = await List.create({ name: 'House decor' });
+      const { req, res, next } = setupReqRes();
+      const params = {
+        req: { params: { id: testList._id } },
+      };
+      merge({ req, res, next }, params);
+      await deleteOne(List)(req, res, next);
+      expect(res.status).toBeCalledWith(204);
+      expect(res.end).toHaveBeenCalledTimes(1);
     });
   });
 });
