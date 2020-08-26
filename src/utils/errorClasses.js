@@ -11,7 +11,7 @@ export class ApplicationError extends Error {
   }
 }
 
-export class NotFound extends ApplicationError {
+export class InvalidRequest extends ApplicationError {
   constructor(message, options) {
     super(message);
     assert(typeof message === 'string');
