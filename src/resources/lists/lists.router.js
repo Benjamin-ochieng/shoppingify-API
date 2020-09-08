@@ -1,17 +1,14 @@
 import { Router } from 'express';
+import listController from './list.controller';
 
 const router = Router();
-const getter = (req, res) => res.send('got something');
-const poster = (req, res) => res.send('posted something');
-const editer = (req, res) => res.send('edited something');
-const remover = (req, res) => res.send('posted something');
 
-router.route('/').get(getter).post(poster);
+router.route('/').get(listController.findMany).post(listController.createOne);
 // eslint-disable-next-line prettier/prettier
-router.route('/:id')
-  .get(getter)
-  .post(poster)
-  .put(editer)
-  .delete(remover);
+router
+  .route('/:id')
+  .get(listController.findOne)
+  .put(listController.updateOne)
+  .delete(listController.deleteOne);
 
 export default router;

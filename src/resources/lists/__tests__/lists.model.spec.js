@@ -29,4 +29,12 @@ describe('List model', () => {
       default: 'active',
     });
   });
+
+  it('has has a createdBy property', () => {
+    const { createdBy } = List.schema.obj;
+    expect(createdBy).toEqual({
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
+    });
+  });
 });

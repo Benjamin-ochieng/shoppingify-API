@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { validationErrors, notFound } from '../errorHandler';
+import { validationErrors, invalidRequest } from '../errorHandler';
 import setupReqRes from '../../../test-reqRes-setup';
 import { InvalidRequest } from '../errorClasses';
 
@@ -30,13 +30,13 @@ describe('validationErrors', () => {
   });
 });
 
-describe('notFound', () => {
-  it('calls next if error is not a NotFound error', () => {
+describe('InvalidRequest', () => {
+  it('calls next if error is not an InvalidRequest error', () => {
     const { req, res, next } = setupReqRes();
     const err = () => {
       throw new Error();
     };
-    notFound(() => err(), req, res, next);
+    invalidRequest(() => err(), req, res, next);
     expect(next).toHaveBeenCalledTimes(1);
   });
 
@@ -50,7 +50,7 @@ describe('notFound', () => {
         path: '/12345', // eslint-disable-next-line comma-dangle
       });
     } catch (error) {
-      notFound(error, req, res, next);
+      invalidRequest(error, req, res, next);
     }
     const [data] = res.json.mock.calls[0];
     expect(res.status).toHaveBeenCalledWith(404);

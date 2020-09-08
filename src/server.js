@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -7,20 +8,25 @@ import { connectDb } from './utils/db';
 import {
   validationErrors,
   productionErrors,
-  notFound,
+  invalidRequest,
 } from './utils/errorHandler';
+import * as auth from './utils/auth';
 import listRouter from './resources/lists/lists.router';
 
 const app = express();
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(cors());
 app.use(morgan('dev'));
 
+app.use('/signup', auth.signUp);
+app.use('/signin', auth.signIn);
+app.use(auth.authorize);
 app.use('/lists', listRouter);
 
-app.use(notFound);
+app.use(invalidRequest);
 app.use(validationErrors);
 app.use(productionErrors);
 

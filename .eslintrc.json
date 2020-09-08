@@ -4,12 +4,17 @@
     "commonjs": true,
     "es2020": true
   },
-  "extends": ["prettier", "airbnb-base", "plugin:jest/recommended"],
+  "extends": ["airbnb-base", "prettier", "plugin:jest/recommended"],
   "plugins": ["prettier", "jest"],
   "parserOptions": {
     "ecmaVersion": 11
   },
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": ["error", {
+      "endOfLine": "auto"
+    }],
+    "no-underscore-dangle": ["error", {
+      "allow": ["_id"]
+    }]
   }
 }

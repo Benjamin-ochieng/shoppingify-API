@@ -18,6 +18,11 @@ const listSchema = new mongoose.Schema(
       enum: ['active', 'completed', 'cancelled'],
       default: 'active',
     },
+
+    createdBy: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
+    },
   },
   // eslint-disable-next-line prettier/prettier
   { timestamps: true },

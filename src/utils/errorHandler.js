@@ -3,14 +3,14 @@
 import mongoose from 'mongoose';
 import { InvalidRequest } from './errorClasses';
 
-export const notFound = (error, req, res, next) => {
+export const invalidRequest = (error, req, res, next) => {
   if (error instanceof InvalidRequest === false) {
     return next(error);
   }
   // eslint-disable-next-line object-curly-newline
   const { type, status, message, path } = error;
   // eslint-disable-next-line object-curly-newline
-  res.status(404).json({ type, status, message, path });
+  res.status(status).json({ type, status, message, path });
 };
 
 const errorToJson = (error) => {
@@ -33,8 +33,8 @@ export const validationErrors = (error, req, res, next) => {
   res.status(400).json({ type, title, errors: err });
 };
 
-export const productionErrors = (error, req, res) => {
-  res.status(error.status || 500);
-  // eslint-disable-next-line no-console
+// eslint-disable-next-line no-unused-vars
+export const productionErrors = (error, req, res, next) => {
   console.log(error);
+  // res.status(500).json({ status: 500, message: 'something went wrong' });
 };

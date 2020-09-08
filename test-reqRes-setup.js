@@ -4,37 +4,38 @@ const setupReqRes = () => {
   const next = jest.fn();
   const req = {
     body: {},
+    user: {},
   };
   const res = {};
   Object.assign(res, {
     status: jest.fn(
       function status() {
         return this;
-      }.bind(res)
+      }.bind(res),
     ),
 
     cookie: jest.fn(
       function () {
         return this;
-      }.bind(res)
+      }.bind(res),
     ),
 
     json: jest.fn(
       function json() {
         return this;
-      }.bind(res)
+      }.bind(res),
     ),
 
     send: jest.fn(
       function send() {
         return this;
-      }.bind(res)
+      }.bind(res),
     ),
 
     end: jest.fn(
       function end() {
         return this;
-      }.bind(res)
+      }.bind(res),
     ),
   });
 

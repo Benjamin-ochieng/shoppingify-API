@@ -8,7 +8,6 @@ describe('listRouter', () => {
       path: '/:id',
       methods: {
         get: true,
-        post: true,
         put: true,
         delete: true,
       },
