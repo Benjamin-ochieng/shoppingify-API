@@ -11,6 +11,7 @@ import {
   invalidRequest,
 } from './utils/errorHandler';
 import * as auth from './utils/auth';
+import userRouter from './resources/users/user.router';
 import listRouter from './resources/lists/lists.router';
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(morgan('dev'));
 app.use('/signup', auth.signUp);
 app.use('/signin', auth.signIn);
 app.use(auth.authorize);
+app.use('/accounts', userRouter);
 app.use('/lists', listRouter);
 
 app.use(invalidRequest);
